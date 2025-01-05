@@ -1,43 +1,70 @@
 # %%
 import numpy as np
-import sys
-sys.path.append("/home/dekorvyb/Documents/criticality_pipeline/")
-
+from collections import defaultdict
+import re
 import os
+import sys
+import heapq
+
+sys.path.append("/home/dekorvyb/Documents/criticality_pipeline/")
 import tools
 
 
-npy_directory = '/cns/share/Vincent/McHugh_lab/CA2Cre_DREADD/extracted_spike_trains/'
-npy_files =[f.split(".")[0] for f in os.listdir(npy_directory)]
+spike_directory = '/cns/share/Vincent/McHugh_lab/CA2Cre_DREADD/extracted_spike_trains/'
+result_directory = '/cns/share/Vincent/McHugh_lab/CA2Cre_DREADD/mr_estimator_results/'
 
-result_directory = '/cns/share/Vincent/McHugh_lab/CA2Cre_DREADD/loren_frank_results/'
-result_files = [f.split(".")[0] for f in os.listdir(result_directory)]
-
-
+def group_files_by_pattern():
+    '''
+    creates a dictionary where the keys are the filenames, but with the tetrode numbers removed.
+    So all tetrodes, that recorded the same area in the same trial can be summed.
+    Also converts all subareas of CA3 to just CA3.
+    '''
+    grouped_files = defaultdict(list)
+    pattern = re.compile(r"^(.*?_tt)\d+(_.*)$")  # Regex to match prefix and suffix excluding `tt`
+    
+    for filename in os.listdir(spike_directory):
         
-for tetrode in npy_files:
+        if filename.split("_")[4] in ["CA3a", "CA3b", "CA3c", "CA13b"]: # CA13b is a typo fix.
+            key_name = filename.replace(filename.split("_")[4], "CA3")
+        
+        else:
+            key_name = filename
+        
+        match = pattern.match(key_name)
+        if match:
+            prefix, suffix = match.groups()
+            group_key = f"{prefix[:-3]}{suffix}"
+            grouped_files[group_key].append(filename)
+    return grouped_files
+
+
+def merge_activity(filename_list):
+    spike_trains = []
     
-    if tetrode in result_files:
-        continue
+    for file in filename_list:
+        path = f'{spike_directory}{file}'
+        spike_trains.append(np.load(path))
     
+    return np.array(list(heapq.merge(*spike_trains)))
+
+
+
+tetrode_dict = group_files_by_pattern()
+
+for trial_area in tetrode_dict.keys():
     try:
-        file_path = f'{npy_directory}{tetrode}.npy'
-        print("ANALYSING", tetrode)
-
-        timestamps = np.load(file_path)
+        timestamps = merge_activity(tetrode_dict[trial_area])
         binned = tools.bin_timestamps(timestamps, unit = "us") # data unit according to https://neuralynx.com/_software/NeuralynxDataFileFormats.pdf
-        # np.save(f'/cns/share/Vincent/McHugh_lab/analysis_results/test/{tetrode}', binned)
-        
-        
-        tools.mr_estimator_for_numpy(binned, window_size = 90, bin_size = 5, filename = f'{result_directory}/{tetrode}', fit_func = "f_complex")
+        tools.mr_estimator_for_numpy(binned, window_size = 90, bin_size = 5, filename = f'{result_directory}/{trial_area[:-4]}', fit_func = "f_complex")
         
     except Exception as e:
-        with open('/cns/share/Vincent/McHugh_lab/CA2Cre_DREADD/loren_frank_results/failed_analysis.txt', 'a') as f:
-            f.write(f"{tetrode}: {e}\n")
+        with open('/cns/share/Vincent/McHugh_lab/CA2Cre_DREADD/failed_analysis.txt', 'a') as f:
+            f.write(f"{trial_area}: {e}\n")
         continue
+    
 
 # %%
-
+# %%
 '''
 # %%
 ####################################
@@ -101,7 +128,19 @@ model = smf.ols(formula=formula, data=combined_df).fit()
 # Print the summary of the model
 print(model.summary())
 
+
+'''
 # %%
 
 
-'''
+
+
+
+
+
+
+
+
+
+
+
