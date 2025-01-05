@@ -5,7 +5,7 @@ from pathlib import Path
 import os
 import shutil
 
-directory_path = Path("/cns/share/Vincent/McHugh_lab/CA2Cre_DREADD/")
+directory_path = Path("/cns/share/Vincent/McHugh_lab/CA2Cre_DREADD/belated/")
 excluded_folder = directory_path / "renamed_ntt_files"
 file_extension = ".ntt"  # Change this to your desired file extension
 
@@ -18,20 +18,20 @@ ntt_tetrode_keys = { # which tetrode is in which area. list position corresponds
     "144": [None, "CA1", "CA2", None, None, "CA1", "CA1", None, "CA2"],
     "161": [None, "CA1", None, "CA1", "CA2", "CA1", "CA1", "CA1", "CA1"],
     "248": [None, "CA2", None, "CA1", "CA1", "CA1", "CA1", "CA1", "CA1"],
-    "368": [None, "CA1", "CA1", "CA2", "CA3", "CA1", "CA1", "CA1", "CA1", ],
+    "368": [None, "CA1", "CA1", "CA2", "CA3", "CA1", "CA1", "CA1", "CA1"],
     "550": [None, "CA1", "CA1", "CA2", None, "CA1", "DEEP", None, None],
     "556": [None, "CA2", "CA1", "CA2", "DEEP", "CA2", "CA2-CA1", "CA1", "CA1"],
     "572": [None, None, "CA3-CA2", "CA1", "DEEP", None, None, "CA2", "CA2"],
     "1216": [None, "CA2", "CA3a", "CA3c", "CA1", "CA2", "CA1", "CA3c", "CA1"],
     "1223": [None, None, "CA3a", "CA3b", "CA1", "CA3a", "CA2", "CA3b", "CA1"],
-    "1232": [None, None, "CA1", "CA3b", "CA3a", "CA1", "CA13b", "CA2", None]
+    "1232": [None, None, "CA1", "CA3b", "CA3a", "CA1", "CA3b", "CA2", None]
     }
 
 
 ntt_files_new = []
 # create clear filenames
 for filepath in ntt_files:
-    animal_info = filepath.split("/")[6:]
+    animal_info = filepath.split("/")[7:]
     
     animal_nr = animal_info[0].split("_")[1] # extract animal name from filepath. Can remain string
     day = animal_info[1].split("_")[1]
@@ -49,8 +49,8 @@ for filepath in ntt_files:
 
 # copy them to common directory
 
-destination_folder = "/cns/share/Vincent/McHugh_lab/CA2Cre_DREADD/renamed_ntt_files/"
-destination_folder_list = os.listdir("/cns/share/Vincent/McHugh_lab/CA2Cre_DREADD/renamed_ntt_files/")
+destination_folder = "/cns/share/Vincent/McHugh_lab/CA2Cre_DREADD/belated/renamed_ntt_files/"
+destination_folder_list = os.listdir("/cns/share/Vincent/McHugh_lab/CA2Cre_DREADD/belated/renamed_ntt_files/")
 
 # Loop through the file list and rename/copy files
 for sublist in ntt_files_new:
@@ -66,7 +66,6 @@ for sublist in ntt_files_new:
     print(new_filename)
 
 print("File renaming and copying complete.")
-
 
 
 # %%
