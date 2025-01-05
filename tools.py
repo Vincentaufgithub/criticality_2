@@ -3,6 +3,7 @@ import numpy as np
 import utilities.load_spiking_times as spikes
 import matplotlib.pyplot as plt
 import math
+from typing import Literal
 
 
 def save_binned_spike_trains(neuron_dict, destination_folder, key):
@@ -179,7 +180,35 @@ def create_and_save_graph(coefficients, output_handler, id):
 
 
 
-def mr_estimator_for_numpy(data, window_size, bin_size, fit_func, filename, input_steps : tuple = None):
+
+def activity_series_to_time_chunks(summed_epoch_activity, slice_size):
+    chunk_list = []
+                
+    for i in range(0, len(summed_epoch_activity), slice_size):
+        chunk_list.append(summed_epoch_activity[i:(i+slice_size)])
+                
+                
+        # delete last element if it is smaller than the other ones
+        # haven't found a more elegent solution yet
+        if len(chunk_list[-1]) < slice_size:
+            chunk_list = chunk_list[:-1] 
+
+    return chunk_list
+
+
+
+
+
+
+
+
+
+def mr_estimator_for_numpy(data: np.ndarray | list, 
+                           window_size: int, 
+                           bin_size: int, 
+                           fit_func: Literal["f_complex", "f_exponential_offset", "f_exponential"], 
+                           filename: str, 
+                           input_steps : tuple = None):
     '''
     Runs Mr.Estimator on numpy array of spike trains binned to 5ms.
     
@@ -201,7 +230,6 @@ def mr_estimator_for_numpy(data, window_size, bin_size, fit_func, filename, inpu
         num_neurons = data.shape[1]
         # sum up all spike occurrences for one epoch
         data = np.sum(data, axis=1)
-    
     else:
         num_neurons = "?"
     
@@ -209,13 +237,15 @@ def mr_estimator_for_numpy(data, window_size, bin_size, fit_func, filename, inpu
     slice_size = int((window_size * 1000) / bin_size)
     
     # slicing
-    time_chunks = spikes.activity_series_to_time_chunks(
-        data,slice_size)
+    time_chunks = activity_series_to_time_chunks(data, slice_size)
                     
                     
     for n_chunk, chunk in enumerate(time_chunks):
         
-        if np.all(chunk == 0):
+        # data is 1-dimensional and we can compute the overall activity (spike occurences)
+        activity = np.sum(chunk)
+        
+        if activity == 0:
             print("chunk empty")
             continue
                     
@@ -239,7 +269,8 @@ def mr_estimator_for_numpy(data, window_size, bin_size, fit_func, filename, inpu
                     'description': output.description,
                     'tau': output.tau,
                     'branching_factor': output.mre,
-                    'num_neurons': num_neurons
+                    'num_neurons': num_neurons,
+                    'activity': activity
                 }
 
                             
@@ -321,3 +352,5 @@ def bin_timestamps(data, bin_size = 5, unit = "ms", file_key = None):
     
     return return_array
     
+    
+# %%
