@@ -9,6 +9,7 @@ import pandas as pd
 import sys
 parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(parent_dir)
+sys.path.append("/home/dekorvyb/Documents/criticality_pipeline/Criticality_measuers_nature")
 
 import Criticality_measuers_nature as cr
 
@@ -69,7 +70,7 @@ for base_name, file_list in file_groups.items():
         data_to_store = pd.DataFrame([result])             
         filename = f"/local2/Vincent/power_laws/loren_frank/{base_name}.parquet"
                         
-        data_to_store.to_parquet(filename, index = True)
+        #data_to_store.to_parquet(filename, index = True)
         print("stored succesfully:", base_name)
     except Exception as e:
         print(e)
