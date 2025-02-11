@@ -40,7 +40,7 @@ for base_name, file_list in file_groups.items():
                                                window_size= 30,
                                                bin_size= 5,
                                                fit_func = "f_complex",
-                                               filename = f'/local2/Vincent/loren_frank_MR_30s//{base_name}',
+                                               filename = f'/local2/Vincent/loren_frank_MR_30s/{base_name}',
                                                )
 
 # %%
