@@ -256,7 +256,6 @@ def mr_estimator_for_numpy(data: np.ndarray | list,
                         
             output = mre.fit(coefficients.coefficients, fitfunc = fit_func)
 
-                        
             data_to_store = {
                     'popt': output.popt,
                     'ssres': output.ssres,
@@ -275,7 +274,7 @@ def mr_estimator_for_numpy(data: np.ndarray | list,
 
                             
             data_to_store = pd.DataFrame([data_to_store])
-                        
+            
             data_to_store.to_parquet(f'{filename}_{n_chunk:03d}.parquet', index = True)
                         
             print("analysed and saved", f'{filename}_{n_chunk:03d}.parquet')
@@ -289,7 +288,7 @@ def mr_estimator_for_numpy(data: np.ndarray | list,
 
 
 
-def bin_timestamps(data, bin_size = 5, unit = "ms", file_key = None):
+def bin_timestamps(data, bin_size = 5, unit = "ms", file_key = None, cut_offset = True):
     """_summary_
 
     Args:
@@ -308,12 +307,20 @@ def bin_timestamps(data, bin_size = 5, unit = "ms", file_key = None):
     if unit == "us":
         data = data / 1000
     
+    if unit == "s":
+        data = data * 1000
+        
+    
+    if cut_offset:
+        # e.g. first spike detected after 4203.39ms -> first bin at 4200ms
+        start_time = round( math.floor(data[0] / bin_size) * bin_size)
+    else:
+        start_time = data[0]
+    
+    
     # for one-dimensional input
     # should be sorted in ascending order
     if type(data) == np.ndarray and data.ndim == 1:
-        # cut recording offset.
-        # e.g. first spike detected after 4203.39ms -> first bin at 4200ms
-        start_time = round( math.floor(data[0] / bin_size) * bin_size)
         bin_edges = np.arange(start_time, data[-1] + bin_size, bin_size) # create grid to bin time series onto
         
         # create empty 2-d array. The binned time series will be integrated into the return_array
