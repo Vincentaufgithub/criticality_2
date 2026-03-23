@@ -134,12 +134,14 @@ def bin_timestamps(data):
 # structure of downloaded data
 Animal = namedtuple('Animal', {'directory', 'short_name'})
 animals = {
-    'dav': Animal(directory = '/groups/cns/share/dekorvyb/Dave/',
-                    short_name='dav')
-    #'cha': Animal(directory = '/groups/cns/share/dekorvyb/Chapati/',
-    #              short_name='cha'),
-    #'con': Animal(directory = '/groups/cns/dekorvyb/Conley/',
-    #              short_name='con')
+    'bon': Animal(directory = '/groups/cns/dekorvyb/Bond/', short_name='bon'),
+    'cha': Animal(directory = '/groups/cns/share/dekorvyb/Chapati/', short_name='cha'),
+    'con': Animal(directory = '/groups/cns/dekorvyb/Conley/', short_name='con'),
+    'Cor': Animal(directory = '/groups/cns/dekorvyb/Corriander/', short_name='Cor'),
+    'dav': Animal(directory = '/groups/cns/share/dekorvyb/Dave/', short_name='dav'),
+    'dud': Animal(directory = '/groups/cns/dekorvyb/Dudley/', short_name='dud'),
+    'egy': Animal(directory = '/groups/cns/dekorvyb/Egypt/', short_name='egy'),
+    'fra': Animal(directory = '/groups/cns/dekorvyb/Frank/', short_name='fra'),
             }
 
 # create an info df about the epochs for all available animals. filter for epochs where animal is running (i.e. track data)
@@ -156,10 +158,12 @@ neuron_info = lfdp.make_neuron_dataframe(animals)
 # delete missing data and split tetrode df according to area
 tetrode_info_run = tetrode_info_run[tetrode_info_run['numcells'] != 0]
 tetrode_ca1 = tetrode_info_run[(tetrode_info_run['area'] == 'CA1') | (tetrode_info_run['area'] == 'ca1')]
+tetrode_ca2 = tetrode_info_run[(tetrode_info_run['area'] == 'CA2') | (tetrode_info_run['area'] == 'ca2')]
 tetrode_ca3 = tetrode_info_run[(tetrode_info_run['area'] == 'CA3') | (tetrode_info_run['area'] == 'ca3')]
 
 
-for tetrode_group, area in [(tetrode_ca1, 'ca1'), (tetrode_ca3, 'ca3')]:
+# for tetrode_group, area in [(tetrode_ca1, 'ca1'), (tetrode_ca1, 'ca2'), (tetrode_ca3, 'ca3')]:
+for tetrode_group, area in [(tetrode_ca1, 'ca2')]:
     # iterate over all epochs
     for (animal, day, epoch), group in tetrode_group.groupby(level=["animal", "day", "epoch"]):
         
@@ -178,9 +182,11 @@ for tetrode_group, area in [(tetrode_ca1, 'ca1'), (tetrode_ca3, 'ca3')]:
         
         
         for arm in transitions.keys():
-            for start, _ in transitions[arm]:
+            for start, end in transitions[arm]:
                 # for now, we are defining the end of each visit as 30s after entry -> each visit will be of same length
+                # ... or 30s before exit
                 end = start + pd.Timedelta(seconds=30)
+                start = end - pd.Timedelta(seconds=30) # alternatively: end = start + pd.Timedelta(seconds=30)
                 
                 try:
                     # get spikes during visit to arm
@@ -202,6 +208,5 @@ for tetrode_group, area in [(tetrode_ca1, 'ca1'), (tetrode_ca3, 'ca3')]:
                 except Exception as e:
                     print(e)
                     continue
-            
-# %%
 
+# %%

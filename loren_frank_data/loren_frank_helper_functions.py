@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 from glob import glob
 from scipy.io import loadmat
-import pynapple as nap
 
 import loren_frank_data_processing.neurons as lf_neurons 
 
@@ -99,7 +98,7 @@ def create_sorted_dict_with_tasks(animal):
     # print all the different states that were defined by the lab
     # print(task_files_dict_sorted.keys())
     
-    return task_files_dict_sorted
+    return task_files_dict_sorted 
 
 
 

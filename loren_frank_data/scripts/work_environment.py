@@ -82,7 +82,35 @@ for animal_name in animal_list:
             tools.run_mr_estimator_on_summed_activity(binned_spike_trains, bin_size, window_size, dest_folder_mr_analysis, key)
             
         except Exception as e:
-            print(e)
+            print(e) 
             
 
+# %%
+from collections import namedtuple
+import os
+import sys
+
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..','..'))
+sys.path.append(parent_dir)
+
+import tools
+import loren_frank_data.loren_frank_helper_functions as lf_helper
+
+Animal = namedtuple('Animal', {'short_name', 'directory'})
+
+animals_dict = {
+           'fra' : Animal(short_name = 'fra', directory = '/groups/cns/dekorvyb/Frank/'),
+            }
+
+
+animal_list = ["fra"] # CA1 and CA3 done for: frank, bond, gov, egy, cha, con, cor, dav
+
+for animal_name in animal_list:
+    
+    animal = animals_dict[animal_name]
+
+    cellinfo_dict_sorted_by_area, recorded_areas = lf_helper.create_sorted_dict_with_cellinfos(animal)
+    taskinfo_dict_sorted_by_state = lf_helper.create_sorted_dict_with_tasks(animal)
+    print(recorded_areas) 
+  
 # %%

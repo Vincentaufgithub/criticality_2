@@ -10,10 +10,10 @@ import matlab.engine
 import os
 import numpy as np
 
-directory_path = "C:/Users/User/Documents/Arbeit/McHugh/renamed_ntt_files"
+directory_path = "/groups/cns/share/Vincent/McHugh_lab/CA2Cre_CTRL/renamed_ntt_files"
 ntt_files = os.listdir(directory_path)
 
-goal_directory = "C:/Users/User/Documents/Arbeit/McHugh/extracted_spike_trains"
+goal_directory = "/groups/cns/share/Vincent/McHugh_lab/CA2Cre_CTRL/spike_trains"
 
 # Start the MATLAB engine
 eng = matlab.engine.start_matlab()

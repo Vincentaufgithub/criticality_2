@@ -1,0 +1,100 @@
+# Documentation of analysis 
+
+--------------------------------------------
+## useful experimental days ##
+- these are only the days that have CNO-injection, plus at least one recording session before AND after.
+
+animal_model:
+- day
+
+144:
+- 16 (sleep, boxA, sleep, cno_2, boxC, sleep, boxA, sleep)
+
+
+161:
+- 10 (sleep, cno_2, sleep)
+- 12 (sleep, lt1, sleep, cno_2, lt1, sleep)
+
+
+248:
+- 04 (sleep, cno_2, lt1) # not really usable 
+- 11 (sleep, cno_2, sleep)
+
+
+368:
+- 14 (sleep, boxA, cno_2, boxB, sleep, boxA, sleep)
+- 16 (sleep, lt1, cno_1, lt1, sleep)
+
+
+550:
+- 16 (sleep, cno_2, lt1, sleep)
+- 17 (sleep, lt1, cno_1, lt2, sleep, lt1, sleep)
+- 21 (sleep, lt2, cno_2, lt3, sleep, lt2, sleep)
+
+
+556:
+- 12 (sleep, cno_1, lt1, sleep)
+- 13 (sleep, lt1, cno_2, lt2, sleep, lt1, sleep)
+- 19 (sleep, lt2, cno_2, lt3, sleep, lt2, sleep)
+
+
+572:
+- 16 (sleep, cno_2, lt1, sleep)
+- 17 (sleep, lt1, cno_4, lt2, sleep, lt1, sleep)
+- 18 (sleep, lt2, cno_4, lt3, sleep, lt2, sleep)
+
+
+1216:
+- 10 (sleep, lt1, cno_?, lt2, sleep, lt1, sleep)
+- 12 (sleep, lt1, cno_?, lt1, sleep)
+
+
+1223:
+- 12 (sleep, lt1, cno_2, lt1, sleep)
+- 13 (sleep, lt1, cno_?, lt1, sleep)
+- 14 (sleep, lt1, cno_?, lt2, sleep, lt1, sleep)
+- 15 (sleep, lt1, cno_?, lt3, sleep, lt1, sleep)
+
+
+1232:
+- 13 (sleep, lt1, cno_?, lt1, sleep)
+- 14 (sleep, lt1, cno_?, lt2, sleep, lt1, sleep)
+- 15 (sleep, lt1, cno_?, lt1, sleep)
+
+
+# converted to list:
+[
+    "model144_d16",
+    "model161_d10",
+    "model161_d12",
+    "model248_d04",
+    "model248_d11",
+    "model368_d14",
+    "model368_d16",
+    "model550_d16",
+    "model550_d17",
+    "model550_d21",
+    "model556_d12",
+    "model556_d13",
+    "model556_d19",
+    "model572_d16",
+    "model572_d17",
+    "model572_d18",
+    "model1216_d10",
+    "model1216_d12",
+    "model1223_d12",
+    "model1223_d13",
+    "model1223_d14",
+    "model1223_d15",
+    "model1232_d13",
+    "model1232_d14",
+    "model1232_d15"
+]
+
+
+
+--------------------------------------
+# useful control days
+
+
+

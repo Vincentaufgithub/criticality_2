@@ -10,8 +10,8 @@ sys.path.append("/home/dekorvyb/Documents/criticality_pipeline/")
 import tools
 
 
-spike_directory = '/cns/share/Vincent/McHugh_lab/CA2Cre_DREADD/extracted_spike_trains/'
-result_directory = '/cns/share/Vincent/McHugh_lab/CA2Cre_DREADD/mr_estimator_results/'
+spike_directory = '/groups/cns/share/Vincent/McHugh_lab/CA2Cre_CTRL/extracted_spike_trains/'
+result_directory = '/groups/cns/share/Vincent/McHugh_lab/CA2Cre_CTRL/results/'
 
 def group_files_by_pattern():
     '''
@@ -58,7 +58,7 @@ for trial_area in tetrode_dict.keys():
         tools.mr_estimator_for_numpy(binned, window_size = 90, bin_size = 5, filename = f'{result_directory}/{trial_area[:-4]}', fit_func = "f_complex")
         
     except Exception as e:
-        with open('/cns/share/Vincent/McHugh_lab/CA2Cre_DREADD/failed_analysis.txt', 'a') as f:
+        with open('/groups/cns/share/Vincent/McHugh_lab/CA2Cre_DREADD/failed_analysis.txt', 'a') as f:
             f.write(f"{trial_area}: {e}\n")
         continue
     
